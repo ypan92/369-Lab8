@@ -69,23 +69,23 @@ public class SeedKNN {
 					if (i != (int)targetKey) {
 						ArrayList<Double> compareVals = seedValues.get((long)i);
 						if (compareVals != null) {
-						double cartProd = 0;
-						for (int j = 0; j < compareVals.size(); j++) {
-							double diff = targetVals.get(j) - compareVals.get(j);
-							cartProd += diff * diff;
-						}
-						double compareDist = Math.sqrt(cartProd);
-						long compareSeed = (long)i;
+							double cartProd = 0;
+							for (int j = 0; j < compareVals.size(); j++) {
+								double diff = targetVals.get(j) - compareVals.get(j);
+								cartProd += diff * diff;
+							}
+							double compareDist = Math.sqrt(cartProd);
+							long compareSeed = (long)i;
 
-						if (distances.containsKey(targetKey)) {
-							HashMap<Long, Double> distPairs = distances.get(targetKey);
-							distPairs.put(compareSeed, compareDist);
-						}
-						else {
-							HashMap<Long, Double> distPairs = new HashMap<Long, Double>();
-							distPairs.put(compareSeed, compareDist);
-							distances.put(targetKey, distPairs);
-						}
+							if (distances.containsKey(targetKey)) {
+								HashMap<Long, Double> distPairs = distances.get(targetKey);
+								distPairs.put(compareSeed, compareDist);
+							}
+							else {
+								HashMap<Long, Double> distPairs = new HashMap<Long, Double>();
+								distPairs.put(compareSeed, compareDist);
+								distances.put(targetKey, distPairs);
+							}
 						}
 					}
 				}
