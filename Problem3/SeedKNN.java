@@ -80,6 +80,7 @@ public class SeedKNN {
 							if (distances.containsKey(targetKey)) {
 								HashMap<Long, Double> distPairs = distances.get(targetKey);
 								distPairs.put(compareSeed, compareDist);
+								distances.put(targetKey, distPairs);
 							}
 							else {
 								HashMap<Long, Double> distPairs = new HashMap<Long, Double>();
