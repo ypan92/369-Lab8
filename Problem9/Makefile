@@ -1,9 +1,9 @@
-program = KitchenUse
+program = PowerComp
 inputFilepath = /datasets/
 inputFile = household_power_consumption.txt
-outputFilepath = ./test/l8p8output
+outputFilepath = ./test/l8p9output
 jarFilepath = ./../jars/*
-interPath = ./test/l8p8inter
+interPath = ./test/l8p9inter
 
 default:
 	javac -cp "$(jarFilepath)" *.java
