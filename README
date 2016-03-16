@@ -1,0 +1,19 @@
+Austin (Yang) Pan and Jordan Tang
+
+The problems covered in this submission are problem 2, 3, 7, and 8
+
+=============================
+----- Makefile commands -----
+=============================
+
+To Compile:
+	make
+
+To Create Jar:
+	make jar
+
+To Run Job:
+	make job
+
+To Remove Output Filepaths:
+	make remove
