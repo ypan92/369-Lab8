@@ -1,5 +1,5 @@
 // CPE 369 Winter 2016
-// Yang Pan, Jordan Tang Lab8
+// Jordan Tang, Yang Pan Lab8
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -22,13 +22,15 @@ import org.apache.hadoop.fs.Path;
 import java.io.IOException;
 import java.util.*;
 
-public class SeedKNN {
+public class SeedNormKNN {
 
-	public static class SeedMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
+	public static class SeedNormMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
 		HashMap<Long, ArrayList<Double>> seedValues = new HashMap<Long, ArrayList<Double>>();
 		HashMap<Long, HashMap<Long, Double>> distances = new HashMap<Long, HashMap<Long, Double>>();
 		long count = 1;
+
+		HashMap<Long, ArrayList<Double>> featureAvgMaxMinTuples = new HashMap<Long, ArrayList<Double>>();
 
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
@@ -36,10 +38,29 @@ public class SeedKNN {
 			String[] values = line.split("\\s+");
 			if (values.length == 8) {
 				long seed = count++;
+				double sumOfVals = 0;
+				double max = 0;
+				double min = Double.MAX_VALUE;
 				ArrayList<Double> seedVals = new ArrayList<Double>();
 				for (int i = 0; i < values.length - 1; i++) {
-					seedVals.add(Double.parseDouble(values[i]));
+					double doubleVal = Double.parseDouble(values[i]);
+					seedVals.add(doubleVal);
+					sumOfVals += doubleVal;
+					if (doubleVal > max) {
+						max = doubleVal;
+					}
+					if (doubleVal < min) {
+						min = doubleVal;
+					}
 				}
+
+				double avg = sumOfVals / 7.0;
+
+				ArrayList<Double> avgMaxMinTuple = new ArrayList<Double>();
+				avgMaxMinTuple.add(avg);
+				avgMaxMinTuple.add(max);
+				avgMaxMinTuple.add(min);
+				featureAvgMaxMinTuples.put(seed, avgMaxMinTuple);
 
 				seedValues.put(seed, seedVals);
 			}
@@ -72,8 +93,20 @@ public class SeedKNN {
 						ArrayList<Double> compareVals = seedValues.get((long)i);
 						if (compareVals != null) {
 							double cartProd = 0;
+							ArrayList<Double> targetTuple = featureAvgMaxMinTuples.get(targetKey);
+							ArrayList<Double> compareTuple = featureAvgMaxMinTuples.get((long)i);
+
+							double targetAvg = targetTuple.get(0);
+							double targetMax = targetTuple.get(1);
+							double targetMin = targetTuple.get(2);
+							double compareAvg = compareTuple.get(0);
+							double compareMax = compareTuple.get(1);
+							double compareMin = compareTuple.get(2);
+
 							for (int j = 0; j < compareVals.size(); j++) {
-								double diff = targetVals.get(j) - compareVals.get(j);
+								double normTargetVal = (targetVals.get(j) - targetAvg) / (targetMax - targetMin);
+								double normCompareVal = (compareVals.get(j) - compareAvg) / (compareMax - compareMin);
+								double diff = normTargetVal - normCompareVal;
 								cartProd += diff * diff;
 							}
 							double compareDist = Math.sqrt(cartProd);
@@ -112,7 +145,7 @@ public class SeedKNN {
 		}
 	}
 
-	public static class SeedReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
+	public static class SeedNormReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
 
 		@Override
 		public void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -124,10 +157,10 @@ public class SeedKNN {
 
 	public static void main(String[] args) throws Exception {
 		Job job = Job.getInstance();
-		job.setJarByClass(SeedKNN.class);
+		job.setJarByClass(SeedNormKNN.class);
 
-		job.setMapperClass(SeedMapper.class);
-		job.setReducerClass(SeedReducer.class);
+		job.setMapperClass(SeedNormMapper.class);
+		job.setReducerClass(SeedNormReducer.class);
 
 		job.setOutputKeyClass(LongWritable.class);
 		job.setOutputValueClass(Text.class);

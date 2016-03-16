@@ -1,3 +1,5 @@
+// CPE 369 Winter 2016
+// Yang Pan, Jordan Tang Lab8
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
