@@ -3,9 +3,10 @@ inputFilePath1 = /datasets/poker-hand-traning.true.data.txt
 inputFilePath2 = /datasets/poker-hand-testing.data.txt
 outputFilePath1 = ./highestValueRaw
 outputFilePath2 = ./formattedHighestValue
+jarFilepath = ./../jars/*
 
 default:
-	javac -cp hadoop-core-1.2.1.jar $(program).java
+	javac -cp "$(jarFilepath)" $(program).java
 jar:
 	jar cvf $(program).jar *.class
 job:

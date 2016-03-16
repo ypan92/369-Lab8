@@ -1,9 +1,10 @@
 program = SeedKNN
 inputFilePath = /datasets/seeds_dataset.txt
 outputFilePath = ./seedOutput
+jarFilepath = ./../jars/*
 
 default:
-	javac -cp hadoop-core-1.2.1.jar $(program).java
+	javac -cp "$(jarFilepath)" $(program).java
 jar:
 	jar cvf $(program).jar *.class
 job:
