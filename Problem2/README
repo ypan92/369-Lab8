@@ -1,0 +1,14 @@
+This program expects the traning dataset file to be run as the first commandline argument and the testing dataset file to be run as the second commandline argument.
+
+
+This is exemplified in the Makefile with:
+make job
+
+which translates to 
+hadoop jar LargestValue.jar LargestValue /datasets/poker-hand-traning.true.data.txt /datasets/poker-hand-testing.data.txt ./highestValueRaw ./formattedHighestValue
+
+This job requires 4 commandline arguments.  The first 2 are the 2 input data files.
+
+The thrid input is the file name of the raw largest hand information from the first MapReduce Job.
+
+The fourth input is the file name of the formatted output after going through the format MapReduce job.

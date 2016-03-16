@@ -1,8 +1,5 @@
-// CSC 369 Winter 2016
-// Waylin Wang, Myron Zhao Lab7
-
-// run with  hadoop jar job.jar MultilineJsonJob -libjars /path/to/json-20151123.jar,/path/to/json-mapreduce-1.0.jar /input /output
-
+// CPE 369 Winter 2016
+// Jordan Tang, Yang Pan Lab8
 
 import java.io.IOException;
 import java.util.Iterator;
